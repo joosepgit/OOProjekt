@@ -3,13 +3,13 @@ import java.util.ArrayList;
 
 public class Pitsa implements Suurus{
     private ArrayList<Kate> katted;
-    private double hind;
     private String suurus;
     private String nimetus;
+    private double väiksehind;
+    private double suurehind;
 
-    public Pitsa(ArrayList<Kate> katted, double hind, String suurus, String nimetus){
+    public Pitsa(ArrayList<Kate> katted, String suurus, String nimetus){
         this.katted = katted;
-        this.hind = hind;
         this.suurus = suurus;
         this.nimetus = nimetus;
     }
@@ -21,15 +21,24 @@ public class Pitsa implements Suurus{
     public void setKatted(ArrayList<Kate> katted) {
         this.katted = katted;
     }
+    public double getHind(){
+        if (suurus.equals("V".toLowerCase()))
+            return getVäikseHind();
+        return getSuureHind();
+    }
 
-    public double getHind() {
+    public double getVäikseHind() {
+        double hind = 0;
+        for (Kate kate : katted)
+            hind+= kate.getHind();
+        return hind*0.6;
+    }
+    public double getSuureHind() {
+        double hind = 0;
+        for (Kate kate : katted)
+            hind+= kate.getHind();
         return hind;
     }
-
-    public void setHind(double hind) {
-        this.hind = hind;
-    }
-
     public String getSuurus() {
         return suurus;
     }
@@ -48,11 +57,14 @@ public class Pitsa implements Suurus{
 
     @Override
     public String toString() {
-        return "Pitsa{" +
-                "katted=" + katted +
-                ", hind=" + hind +
-                ", suurus='" + suurus + '\'' +
-                ", nimetus='" + nimetus + '\'' +
-                '}';
+        return "\n\nPitsa: " + nimetus +
+                "\nKoostisosad: " + katted +
+                "\nHind(väike/suur): " + getVäikseHind()+"/"+getSuureHind();
+
+    }
+
+    @Override
+    public void valiSuurus() {
+
     }
 }

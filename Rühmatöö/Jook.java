@@ -3,20 +3,12 @@ package Rühmatöö;
 public class Jook implements Suurus{
     private String nimetus;
     private double hind;
-    private double suurus;
+    private String suurus;
 
-    public Jook(String nimetus, double hind, double suurus){
+    public Jook(String nimetus, String suurus, double hind){
         this.nimetus = nimetus;
-        this.hind = hind;
         this.suurus = suurus;
-    }
-
-    public String getNimetus() {
-        return nimetus;
-    }
-
-    public void setNimetus(String nimetus) {
-        this.nimetus = nimetus;
+        this.hind = hind;
     }
 
     public double getHind() {
@@ -27,20 +19,28 @@ public class Jook implements Suurus{
         this.hind = hind;
     }
 
-    public double getSuurus() {
+    public String getNimetus() {
+        return nimetus;
+    }
+
+    public void setNimetus(String nimetus) {
+        this.nimetus = nimetus;
+    }
+
+    public String getSuurus() {
         return suurus;
     }
 
-    public void setSuurus(double suurus) {
+    public void setSuurus(String suurus) {
         this.suurus = suurus;
     }
 
     @Override
     public String toString() {
-        return "Jook{" +
-                "nimetus='" + nimetus + '\'' +
-                ", hind=" + hind +
-                ", suurus=" + suurus +
-                '}';
+        return "\n\n" + nimetus + ", Hind(väike/suur): " + hind;
+    }
+
+    @Override
+    public void valiSuurus() {
     }
 }

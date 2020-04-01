@@ -1,5 +1,6 @@
-import java.util.ArrayList;
 package Rühmatöö;
+
+import java.util.ArrayList;
 
 public class Menüü {
     private ArrayList<Jook> joogid;
@@ -22,15 +23,15 @@ public class Menüü {
     }
 
     public Menüü(){
-        this.joogid = new ArrayList<Jook>;
-        this.pitsad = new ArrayList<Pitsa>;
+        this.joogid = new ArrayList<Jook>();
+        this.pitsad = new ArrayList<Pitsa>();
     }
 
     @Override
     public String toString() {
-        return "Menüü{" +
-                "joogid=" + joogid +
-                ", pitsad=" + pitsad +
-                '}';
+        return "MENÜÜ\n\n" +
+                "PITSAD" + pitsad +
+        "\n\nPitsale 'Omalooming' saab valida kuni 4 lisakomponenti! \n\nJOOGID" + joogid
+                + "\n\nMENÜÜ LÕPP\n";
     }
 }

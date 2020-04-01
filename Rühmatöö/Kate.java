@@ -4,7 +4,7 @@ public class Kate {
     private String nimetus;
     private double hind;
 
-    public Katted(String nimetus, double hind){
+    public Kate(String nimetus, double hind){
         this.nimetus = nimetus;
         this.hind = hind;
     }
@@ -27,9 +27,6 @@ public class Kate {
 
     @Override
     public String toString() {
-        return "Katted{" +
-                "nimetus='" + nimetus + '\'' +
-                ", hind=" + hind +
-                '}';
+        return nimetus;
     }
 }

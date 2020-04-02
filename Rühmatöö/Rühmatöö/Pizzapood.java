@@ -2,7 +2,6 @@ package Rühmatöö;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 /*LOE SEDA :D
  * Nii, pmst tegin siia palju isendeid igast klassist, suuruse ja hinna suhtega mängimine
@@ -55,30 +54,35 @@ public class Pizzapood {
             System.out.println("Sisestage valitud pitsa nimetus ja suurus 'V' -> (VÄIKE) või 'S' -> (SUUR)." +
                     " \nKui soovite mitut erinevat, siis eraldage komadega.");
             String[] pitsadestring = suhtlus.nextLine().split(",");
-            for (int i = 0; i < pitsadestring.length; i++) {
-                String nimetus = pitsadestring[i].split(" ")[0];
-                String suurus = pitsadestring[i].split(" ")[1];
-                for (int l = 0; l < pitsad.size(); l++) {
-                    if (nimetus.equals(pitsad.get(l).getNimetus()) && suurus.equals(pitsad.get(l).getSuurus())) {
-                        tellitudpitsad.add(pitsad.get(l));
+            if (!pitsadestring[0].equals("")) {
+                for (int i = 0; i < pitsadestring.length; i++) {
+                    String nimetus = pitsadestring[i].trim().split(" ")[0];
+                    String suurus = pitsadestring[i].trim().split(" ")[1];
+                    for (int l = 0; l < pitsad.size(); l++) {
+                        if (nimetus.equals(pitsad.get(l).getNimetus()) && suurus.equals(pitsad.get(l).getSuurus())) {
+                            tellitudpitsad.add(pitsad.get(l));
+                        }
                     }
                 }
             }
             System.out.println("Sisestage valitud joogi nimetus ja suurus 'V' -> (VÄIKE) või 'S' -> (SUUR)." +
                     " \nKui soovite mitut erinevat, siis eraldage komadega.");
             String[] jookidestring = suhtlus.nextLine().split(",");
-            for (int i = 0; i < jookidestring.length; i++) {
-                String nimetus = jookidestring[i].split(" ")[0];
-                String suurus = jookidestring[i].split(" ")[1];
-                for (int l = 0; l < joogid.size(); l++) {
-                    if (nimetus.equals(joogid.get(l).getNimetus()) && suurus.equals(joogid.get(l).getSuurus())) {
-                        tellitudjoogid.add(joogid.get(l));
+            if (!jookidestring[0].equals("")) {
+                for (int i = 0; i < jookidestring.length; i++) {
+                    String nimetus = jookidestring[i].trim().split(" ")[0];
+                    String suurus = jookidestring[i].trim().split(" ")[1];
+                    for (int l = 0; l < joogid.size(); l++) {
+                        if (nimetus.equals(joogid.get(l).getNimetus()) && suurus.equals(joogid.get(l).getSuurus())) {
+                            tellitudjoogid.add(joogid.get(l));
+                        }
                     }
                 }
             }
             Tellimus uus = new Tellimus(tellijaNimi, tellitudpitsad, tellitudjoogid);
             System.out.println(uus.toString());
-            System.out.println("Tellimuse hind: "+ uus.koguhind());
+            System.out.println();
+            System.out.println("HIND KOKKU: "+ uus.koguhind());
             System.out.println("Kui soovite veel midagi tellida, vajutage enterit, kui ei, kirjutage 'Stopp' ning siis " +
                     "vajutage enterit.");
             String vastus = suhtlus.nextLine();

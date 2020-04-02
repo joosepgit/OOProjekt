@@ -39,11 +39,10 @@ public class Tellimus {
 
     @Override
     public String toString() {
-        return "Tellimus{" +
-                "tellijaNimi='" + tellijaNimi + '\'' +
-                ", pitsad=" + pitsad +
-                ", joogid=" + joogid +
-                '}';
+        return "TELLIMUS\n" +
+                "Kellele: " + tellijaNimi +
+                " \nPitsad:" + pitsad +
+                " \n\nJoogid:" + joogid;
     }
     public double koguhind(){
         double hind = 0;

@@ -1,7 +1,7 @@
 package Rühmatöö;
 import java.util.ArrayList;
 
-public class Pitsa implements Suurus{
+public class Pitsa{
     private ArrayList<Kate> katted;
     private String suurus;
     private String nimetus;
@@ -55,6 +55,10 @@ public class Pitsa implements Suurus{
         this.nimetus = nimetus;
     }
 
+    public void lisaKate(Kate midagi){
+        katted.add(midagi);
+    }
+
     @Override
     public String toString() {
         return "\n\nPitsa: " + nimetus +
@@ -73,10 +77,5 @@ public class Pitsa implements Suurus{
         return "\n\nPitsa: " + nimetus +
                 "\nKoostisosad: " + katted.toString().substring(1,katted.toString().length()-1) +
                 "\nHind: " + selleHind;
-    }
-
-    @Override
-    public void valiSuurus() {
-
     }
 }

@@ -1,6 +1,6 @@
 package Rühmatöö;
 
-public class Jook implements Suurus{
+public class Jook{
     private String nimetus;
     private double hind;
     private String suurus;
@@ -50,9 +50,5 @@ public class Jook implements Suurus{
             selleHind = väiksehind;
         }
         return "\n\n" + nimetus + "\nHind: " + selleHind;
-    }
-
-    @Override
-    public void valiSuurus() {
     }
 }

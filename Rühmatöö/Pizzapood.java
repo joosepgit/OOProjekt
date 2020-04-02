@@ -34,12 +34,13 @@ public class Pizzapood {
         ArrayList<Kate> katted = new ArrayList<>(Arrays.asList(katted()));
         ArrayList<Pitsa> pitsad = new ArrayList<>(Arrays.asList(pitsad(katted)));
         Menüü menüü = new Menüü();
-        menüü.setJoogid(joogid.subList(joogid.size()/2,joogid.size()));
-        menüü.setPitsad(pitsad.subList(0, pitsad.size()/2));
-        suhtlus(pitsad, menüü, joogid);
+        menüü.setJoogid(joogid.subList(joogid.size() / 2, joogid.size()));
+        menüü.setPitsad(pitsad.subList(0, pitsad.size() / 2));
+        suhtlus(pitsad, menüü, joogid, katted);
     }
 
-    public static void suhtlus(ArrayList<Pitsa> pitsad, Menüü menüü, ArrayList<Jook> joogid) throws InterruptedException {
+    public static void suhtlus(ArrayList<Pitsa> pitsad, Menüü menüü, ArrayList<Jook> joogid, ArrayList<Kate> katted)
+            throws InterruptedException {
         String tellijaNimi;
         ArrayList<String> tellimused = new ArrayList<>();
         ArrayList<Pitsa> tellitudpitsad = new ArrayList<>();
@@ -62,7 +63,11 @@ public class Pizzapood {
                     String nimetus = pitsadestring[i].trim().split(" ")[0];
                     String suurus = pitsadestring[i].trim().split(" ")[1];
                     for (int l = 0; l < pitsad.size(); l++) {
-                        if (nimetus.equals(pitsad.get(l).getNimetus()) && suurus.equals(pitsad.get(l).getSuurus())) {
+                        if (nimetus.toLowerCase().equals("omalooming")) {
+                            tellitudpitsad.add(omalooming(suurus, suhtlus, katted));
+                            break;
+                        }
+                        else if (nimetus.equals(pitsad.get(l).getNimetus()) && suurus.equals(pitsad.get(l).getSuurus())) {
                             tellitudpitsad.add(pitsad.get(l));
                         }
                     }
@@ -83,23 +88,23 @@ public class Pizzapood {
                 }
             }
             Tellimus uus = new Tellimus(tellijaNimi, tellitudpitsad, tellitudjoogid);
-        System.out.println(uus.tellitud());
-        System.out.println();
-        if (Math.random()*100 > 10.0)
-        System.out.println("HIND KOKKU: "+ uus.koguhind());
-        else {
-            System.out.println("HIND KOKKU: " + Math.round(Math.random() * 25 + 5));
+            System.out.println(uus.tellitud());
+            System.out.println();
+            if (Math.random() * 100 > 10.0)
+                System.out.println("HIND KOKKU: " + uus.koguhind());
+            else {
+                System.out.println("HIND KOKKU: " + Math.round(Math.random() * 25 + 5));
+            }
+            tellimused.add(uus.getTellijaNimi() + " " + uus.koguhind());
+            uus.getJoogid().clear();
+            uus.getPitsad().clear();
+            System.out.println("Kui soovite veel midagi tellida, vajutage enterit, kui ei, kirjutage 'Stopp' ning siis " +
+                    "vajutage enterit.");
+            String vastus = suhtlus.nextLine();
+            if (vastus.toLowerCase().equals("stopp")) {
+                break;
+            }
         }
-        tellimused.add(uus.getTellijaNimi() + " " + uus.koguhind());
-        uus.getJoogid().clear();
-        uus.getPitsad().clear();
-        System.out.println("Kui soovite veel midagi tellida, vajutage enterit, kui ei, kirjutage 'Stopp' ning siis " +
-                "vajutage enterit.");
-        String vastus = suhtlus.nextLine();
-        if (vastus.toLowerCase().equals("stopp")){
-            break;
-        }
-    }
         System.out.println("Alustati tellimuste täitmist.");
         while (!tellimused.isEmpty()) {
             Thread.sleep(10000);
@@ -110,12 +115,13 @@ public class Pizzapood {
         System.out.println("Kõik tellimused täidetud.\nUuesti alustamiseks vajutage enterit, lõpetamiseks kirjutage 'stopp'");
         String valik = lõpp.nextLine();
         if (valik.equals(""))
-            suhtlus(pitsad,menüü, joogid);
-        else{
+            suhtlus(pitsad, menüü, joogid, katted);
+        else {
             System.out.println("Lahkusite poest, rõõmsa jällenägemiseni!");
         }
     }
-    public static Jook[] joogid(){
+
+    public static Jook[] joogid() {
         Jook limonaad = new Jook("Limonaad", "V", 2);
         Jook vesi = new Jook("Vesi", "V", 0.5);
         Jook õlu = new Jook("Õlu", "V", 3.5);
@@ -130,7 +136,8 @@ public class Pizzapood {
                 slimonaad, svesi, sõlu, spiim, smahl};
         return joogid;
     }
-    public static Kate[] katted(){
+
+    public static Kate[] katted() {
         Kate sai = new Kate("Sai", 1.5);
         Kate kaste = new Kate("Ketšup", 0.5);
         Kate juust = new Kate("Juust", 2.5);
@@ -142,7 +149,8 @@ public class Pizzapood {
         Kate[] katted = {sai, kaste, juust, hakkliha, salaami, paprika, ananass, seen};
         return katted;
     }
-    public static Pitsa[] pitsad(ArrayList<Kate> katted){
+
+    public static Pitsa[] pitsad(ArrayList<Kate> katted) {
         Kate[] lihamassiiv = {katted.get(0), katted.get(1), katted.get(2), katted.get(3), katted.get(5)};
         Kate[] vorstmassiiv = {katted.get(0), katted.get(1), katted.get(2), katted.get(4), katted.get(6)};
         Kate[] seenemassiiv = {katted.get(0), katted.get(1), katted.get(2), katted.get(7)};
@@ -162,5 +170,30 @@ public class Pizzapood {
         Pitsa[] pitsad = {Hakklihapitsa, Salaamipitsa, Šampinjonipitsa, Omalooming,
                 sHakklihapitsa, sSalaamipitsa, sŠampinjonipitsa, sOmalooming};
         return pitsad;
+    }
+
+    public static Pitsa omalooming(String suurus, Scanner suhtlus, ArrayList<Kate> katted) {
+        Pitsa erinev = new Pitsa(new ArrayList<>(Arrays.asList(
+                new Kate[]{katted.get(0), katted.get(1), katted.get(2)})), suurus, "Omalooming");
+        for (int i = 0; i < 4; i++) {
+            System.out.println("Katted: hakkliha, salaami, paprika, ananass, šampinjonid");
+            System.out.println("Vali kate nr " + (i+1) + ".");
+            System.out.println("Kui ei soovi rohkem katteid valida, vajutage ENTER.");
+            String kate = suhtlus.nextLine().toLowerCase();
+            if (kate.equals("hakkliha")) {
+                erinev.lisaKate(katted.get(3));
+            } else if (kate.equals("salaami")) {
+                erinev.lisaKate(katted.get(4));
+            } else if (kate.equals("paprika")) {
+                erinev.lisaKate(katted.get(5));
+            } else if (kate.equals("ananass")) {
+                erinev.lisaKate(katted.get(6));
+            } else if (kate.equals("šampinjonid")) {
+                erinev.lisaKate(katted.get(7));
+            }else{
+                break;
+            }
+        }
+        return erinev;
     }
 }

@@ -1,9 +1,7 @@
 package Rühmatöö;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 /*LOE SEDA :D
  * Nii, pmst tegin siia palju isendeid igast klassist, suuruse ja hinna suhtega mängimine
@@ -59,16 +57,15 @@ public class Pizzapood {
                     " \nKui soovite mitut erinevat, siis eraldage komadega.");
             String[] pitsadestring = suhtlus.nextLine().split(",");
             if (!pitsadestring[0].equals("")) {
-                for (int i = 0; i < pitsadestring.length; i++) {
-                    String nimetus = pitsadestring[i].trim().split(" ")[0];
-                    String suurus = pitsadestring[i].trim().split(" ")[1];
-                    for (int l = 0; l < pitsad.size(); l++) {
+                for (String sõne : pitsadestring) {
+                    String nimetus = sõne.trim().split(" ")[0];
+                    String suurus = sõne.trim().split(" ")[1];
+                    for (Pitsa pitsa : pitsad) {
                         if (nimetus.toLowerCase().equals("omalooming")) {
                             tellitudpitsad.add(omalooming(suurus, suhtlus, katted));
                             break;
-                        }
-                        else if (nimetus.equals(pitsad.get(l).getNimetus()) && suurus.equals(pitsad.get(l).getSuurus())) {
-                            tellitudpitsad.add(pitsad.get(l));
+                        } else if (nimetus.equals(pitsa.getNimetus()) && suurus.equals(pitsa.getSuurus())) {
+                            tellitudpitsad.add(pitsa);
                         }
                     }
                 }
@@ -77,12 +74,12 @@ public class Pizzapood {
                     " \nKui soovite mitut erinevat, siis eraldage komadega.");
             String[] jookidestring = suhtlus.nextLine().split(",");
             if (!jookidestring[0].equals("")) {
-                for (int i = 0; i < jookidestring.length; i++) {
-                    String nimetus = jookidestring[i].trim().split(" ")[0];
-                    String suurus = jookidestring[i].trim().split(" ")[1];
-                    for (int l = 0; l < joogid.size(); l++) {
-                        if (nimetus.equals(joogid.get(l).getNimetus()) && suurus.equals(joogid.get(l).getSuurus())) {
-                            tellitudjoogid.add(joogid.get(l));
+                for (String sõne : jookidestring) {
+                    String nimetus = sõne.trim().split(" ")[0];
+                    String suurus = sõne.trim().split(" ")[1];
+                    for (Jook jook : joogid) {
+                        if (nimetus.equals(jook.getNimetus()) && suurus.equals(jook.getSuurus())) {
+                            tellitudjoogid.add(jook);
                         }
                     }
                 }
@@ -132,9 +129,8 @@ public class Pizzapood {
         Jook sõlu = new Jook("Õlu", "S", 7);
         Jook spiim = new Jook("Piim", "S", 3);
         Jook smahl = new Jook("Mahl", "S", 6);
-        Jook[] joogid = {limonaad, vesi, õlu, piim, mahl,
+        return new Jook[]{limonaad, vesi, õlu, piim, mahl,
                 slimonaad, svesi, sõlu, spiim, smahl};
-        return joogid;
     }
 
     public static Kate[] katted() {
@@ -146,8 +142,7 @@ public class Pizzapood {
         Kate paprika = new Kate("Paprika", 0.5);
         Kate ananass = new Kate("Ananass", 0.8);
         Kate seen = new Kate("Šampinjon", 1);
-        Kate[] katted = {sai, kaste, juust, hakkliha, salaami, paprika, ananass, seen};
-        return katted;
+        return new Kate[]{sai, kaste, juust, hakkliha, salaami, paprika, ananass, seen};
     }
 
     public static Pitsa[] pitsad(ArrayList<Kate> katted) {
@@ -167,14 +162,13 @@ public class Pizzapood {
         Pitsa sSalaamipitsa = new Pitsa(vorst, "S", "Salaamipitsa");
         Pitsa sŠampinjonipitsa = new Pitsa(seene, "S", "Šampinjonipitsa");
         Pitsa sOmalooming = new Pitsa(suvaline, "S", "Omalooming");
-        Pitsa[] pitsad = {Hakklihapitsa, Salaamipitsa, Šampinjonipitsa, Omalooming,
+        return new Pitsa[]{Hakklihapitsa, Salaamipitsa, Šampinjonipitsa, Omalooming,
                 sHakklihapitsa, sSalaamipitsa, sŠampinjonipitsa, sOmalooming};
-        return pitsad;
     }
 
     public static Pitsa omalooming(String suurus, Scanner suhtlus, ArrayList<Kate> katted) {
         Pitsa erinev = new Pitsa(new ArrayList<>(Arrays.asList(
-                new Kate[]{katted.get(0), katted.get(1), katted.get(2)})), suurus, "Omalooming");
+                katted.get(0), katted.get(1), katted.get(2))), suurus, "Omalooming");
         for (int i = 0; i < 4; i++) {
             System.out.println("Katted: hakkliha, salaami, paprika, ananass, šampinjonid");
             System.out.println("Vali kate nr " + (i+1) + ".");

@@ -37,7 +37,7 @@ public class Jook implements Suurus{
 
     @Override
     public String toString() {
-        return "\n\n" + nimetus + ", Hind(väike/suur): " + hind;
+        return "\n\n" + nimetus + ", Hind (" + suurus + "): " + hind;
     }
 
     @Override

@@ -31,7 +31,7 @@ public class Pitsa implements Suurus{
         double hind = 0;
         for (Kate kate : katted)
             hind+= kate.getHind();
-        return hind*0.6;
+        return Math.ceil(hind*6)/10.0;
     }
     public double getSuureHind() {
         double hind = 0;

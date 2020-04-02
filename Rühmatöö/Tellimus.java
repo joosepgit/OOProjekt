@@ -6,13 +6,11 @@ public class Tellimus {
     private String tellijaNimi;
     private ArrayList<Pitsa> pitsad;
     private ArrayList<Jook> joogid;
-    private double koguhind;
 
-    public Tellimus(String tellijaNimi, ArrayList<Pitsa> pitsad, ArrayList<Jook> joogid, double koguhind){
+    public Tellimus(String tellijaNimi, ArrayList<Pitsa> pitsad, ArrayList<Jook> joogid){
         this.tellijaNimi = tellijaNimi;
         this.pitsad = pitsad;
         this.joogid = joogid;
-        this.koguhind = koguhind;
     }
 
     public String getTellijaNimi() {
@@ -39,21 +37,27 @@ public class Tellimus {
         this.joogid = joogid;
     }
 
-    public double getKoguhind() {
-        return koguhind;
-    }
-
-    public void setKoguhind(double koguhind) {
-        this.koguhind = koguhind;
-    }
-
     @Override
     public String toString() {
         return "Tellimus{" +
                 "tellijaNimi='" + tellijaNimi + '\'' +
                 ", pitsad=" + pitsad +
                 ", joogid=" + joogid +
-                ", koguhind=" + koguhind +
                 '}';
+    }
+    public double koguhind(){
+        double hind = 0;
+        for (int i = 0; i < pitsad.size(); i++) {
+            if(pitsad.get(i).getSuurus().equals("S")){
+                hind += pitsad.get(i).getSuureHind();
+            }
+            else{
+                hind += pitsad.get(i).getVäikseHind();
+            }
+        }
+        for (int i = 0; i < joogid.size(); i++) {
+            hind += joogid.get(i).getHind();
+        }
+        return hind;
     }
 }

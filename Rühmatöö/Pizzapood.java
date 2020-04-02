@@ -3,27 +3,6 @@ package Rühmatöö;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-/*LOE SEDA :D
- * Nii, pmst tegin siia palju isendeid igast klassist, suuruse ja hinna suhtega mängimine
- * tõmbas mähisesse lõpuks, ei saagi nüüd aru kas me peaksmine menüü jaoks eraldi
- * järjendid tegema või selle suuruse jaoks ikkagi mingi muu lahenduse leidma,
- * liidest ei osanud kuidagi sisse tuua hetkel. Kirjutasin mingi esialgse kasutajaga
- * suhtluse ka valmis, siin samas klassis kõige all. Pitsal iseenesest on
- * suuruse kaudu hinna määramine korras, aga menüüs kuvamine võiks ikkagi ühekordne olla...
- * joogiga ei teagi praegu kuidas võiks teha. Tellimuse klass on iseenesest suht
- * kasutu kui tal on parameetriks juba terve tellimuse hind, tellimuse klassi
- * eesmärk võikski äkki olla selle koguhinna arvutamine kõige lõpus? Mõtlesin suhtluse osas
- * nii teha, et kõik kasutaja sisendid salvestatakse esialgu muutujatesse, siis tehakse
- * temast tellimuse isend, tagastatakse täishind ja salvestatkse n-ö käsil olevate
- * tellimuste massiivi. Tellimuse valmis saamine võiks võtta mingi 30 sekundit.
- * Tellimuse sisestamise while loop võiks kesta kuni kasutaja sisestab lõpp.
- * Vastasel juhul võtab peaklass lihtsalt järjest uusi tellimusi. Pitsa, kate ja menüü
- * klassid on enamvähem korras, tellimuse ja joogiga tuleb tegeleda, ja nagu üleval
- * öeldud, siis suurusele võiks parem lahendus saada :D
- *
- * GLHF, kuskil veits enne 14.00 liitun homme probs!
- * Joosep
- * */
 
 
 public class Pizzapood {

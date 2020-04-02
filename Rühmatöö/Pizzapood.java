@@ -1,5 +1,6 @@
 package Rühmatöö;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.Scanner;
 
 
 public class Pizzapood {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ArrayList<Jook> joogid = new ArrayList<>(Arrays.asList(joogid()));
         ArrayList<Kate> katted = new ArrayList<>(Arrays.asList(katted()));
         ArrayList<Pitsa> pitsad = new ArrayList<>(Arrays.asList(pitsad(katted)));
@@ -38,8 +39,9 @@ public class Pizzapood {
         suhtlus(pitsad, menüü, joogid);
     }
 
-    public static void suhtlus(ArrayList<Pitsa> pitsad, Menüü menüü, ArrayList<Jook> joogid) {
+    public static void suhtlus(ArrayList<Pitsa> pitsad, Menüü menüü, ArrayList<Jook> joogid) throws InterruptedException {
         String tellijaNimi;
+        ArrayList<String> tellimused = new ArrayList<>();
         ArrayList<Pitsa> tellitudpitsad = new ArrayList<>();
         ArrayList<Jook> tellitudjoogid = new ArrayList<>();
         while (true) {
@@ -81,16 +83,36 @@ public class Pizzapood {
                 }
             }
             Tellimus uus = new Tellimus(tellijaNimi, tellitudpitsad, tellitudjoogid);
-            System.out.println(uus.tellitud());
-            System.out.println();
-            System.out.println("HIND KOKKU: "+ uus.koguhind());
-            System.out.println("Kui soovite veel midagi tellida, vajutage enterit, kui ei, kirjutage 'Stopp' ning siis " +
-                    "vajutage enterit.");
-            String vastus = suhtlus.nextLine();
-            if (vastus.toLowerCase().equals("stopp")){
-                System.out.println("Rõõmsa jällenägemiseni!");
-                break;
-            }
+        System.out.println(uus.tellitud());
+        System.out.println();
+        if (Math.random()*100 > 10.0)
+        System.out.println("HIND KOKKU: "+ uus.koguhind());
+        else {
+            System.out.println("HIND KOKKU: " + Math.round(Math.random() * 25 + 5));
+        }
+        tellimused.add(uus.getTellijaNimi() + " " + uus.koguhind());
+        uus.getJoogid().clear();
+        uus.getPitsad().clear();
+        System.out.println("Kui soovite veel midagi tellida, vajutage enterit, kui ei, kirjutage 'Stopp' ning siis " +
+                "vajutage enterit.");
+        String vastus = suhtlus.nextLine();
+        if (vastus.toLowerCase().equals("stopp")){
+            break;
+        }
+    }
+        System.out.println("Alustati tellimuste täitmist.");
+        while (!tellimused.isEmpty()) {
+            Thread.sleep(10000);
+            System.out.println("Tellimus " + tellimused.get(0) + " valmis!");
+            tellimused.remove(tellimused.get(0));
+        }
+        Scanner lõpp = new Scanner(System.in);
+        System.out.println("Kõik tellimused täidetud.\nUuesti alustamiseks vajutage enterit, lõpetamiseks kirjutage 'stopp'");
+        String valik = lõpp.nextLine();
+        if (valik.equals(""))
+            suhtlus(pitsad,menüü, joogid);
+        else{
+            System.out.println("Lahkusite poest, rõõmsa jällenägemiseni!");
         }
     }
     public static Jook[] joogid(){

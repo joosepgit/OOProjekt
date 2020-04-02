@@ -81,13 +81,14 @@ public class Pizzapood {
                 }
             }
             Tellimus uus = new Tellimus(tellijaNimi, tellitudpitsad, tellitudjoogid);
-            System.out.println(uus.toString());
+            System.out.println(uus.tellitud());
             System.out.println();
             System.out.println("HIND KOKKU: "+ uus.koguhind());
             System.out.println("Kui soovite veel midagi tellida, vajutage enterit, kui ei, kirjutage 'Stopp' ning siis " +
                     "vajutage enterit.");
             String vastus = suhtlus.nextLine();
             if (vastus.toLowerCase().equals("stopp")){
+                System.out.println("Rõõmsa jällenägemiseni!");
                 break;
             }
         }

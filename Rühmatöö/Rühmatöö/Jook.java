@@ -41,6 +41,16 @@ public class Jook implements Suurus{
     public String toString() {
         return "\n\n" + nimetus + "\nHind (suur/väike): " + hind  + "/" + väiksehind;
     }
+    public String üksik(){
+        double selleHind = 0;
+        if(suurus.equals("S")){
+            selleHind = hind;
+        }
+        else{
+            selleHind = väiksehind;
+        }
+        return "\n\n" + nimetus + "\nHind: " + selleHind;
+    }
 
     @Override
     public void valiSuurus() {

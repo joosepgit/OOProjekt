@@ -62,6 +62,18 @@ public class Pitsa implements Suurus{
                 "\nHind(väike/suur): " + getVäikseHind()+"/"+getSuureHind();
 
     }
+    public String üksik(){
+        double selleHind = 0;
+        if(suurus.equals("S")){
+            selleHind = getSuureHind();
+        }
+        else{
+            selleHind = getVäikseHind();
+        }
+        return "\n\nPitsa: " + nimetus +
+                "\nKoostisosad: " + katted.toString().substring(1,katted.toString().length()-1) +
+                "\nHind: " + selleHind;
+    }
 
     @Override
     public void valiSuurus() {

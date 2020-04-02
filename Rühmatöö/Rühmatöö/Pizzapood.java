@@ -2,6 +2,7 @@ package Rühmatöö;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 /*LOE SEDA :D
  * Nii, pmst tegin siia palju isendeid igast klassist, suuruse ja hinna suhtega mängimine
@@ -32,8 +33,8 @@ public class Pizzapood {
         ArrayList<Kate> katted = new ArrayList<>(Arrays.asList(katted()));
         ArrayList<Pitsa> pitsad = new ArrayList<>(Arrays.asList(pitsad(katted)));
         Menüü menüü = new Menüü();
-        menüü.setJoogid(joogid);
-        menüü.setPitsad(pitsad);
+        menüü.setJoogid(joogid.subList(joogid.size()/2,joogid.size()));
+        menüü.setPitsad(pitsad.subList(0, pitsad.size()/2));
         suhtlus(pitsad, menüü, joogid);
     }
 

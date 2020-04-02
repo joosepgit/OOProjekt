@@ -41,8 +41,8 @@ public class Tellimus {
     public String toString() {
         return "TELLIMUS\n" +
                 "Kellele: " + tellijaNimi +
-                " \nPitsad:" + pitsad +
-                " \n\nJoogid:" + joogid;
+                " \nPitsad:" + pitsad.toString().substring(1,pitsad.toString().length()-1) +
+                " \n\nJoogid:" + joogid.toString().substring(1,joogid.toString().length()-1);
     }
     public double koguhind(){
         double hind = 0;

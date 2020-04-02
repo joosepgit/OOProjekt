@@ -4,11 +4,13 @@ public class Jook implements Suurus{
     private String nimetus;
     private double hind;
     private String suurus;
+    private double väiksehind;
 
     public Jook(String nimetus, String suurus, double hind){
         this.nimetus = nimetus;
         this.suurus = suurus;
         this.hind = hind;
+        this.väiksehind = hind /2.0;
     }
 
     public double getHind() {
@@ -37,7 +39,7 @@ public class Jook implements Suurus{
 
     @Override
     public String toString() {
-        return "\n\n" + nimetus + ", Hind (" + suurus + "): " + hind;
+        return "\n\n" + nimetus + "\nHind (suur/väike): " + hind  + "/" + väiksehind;
     }
 
     @Override

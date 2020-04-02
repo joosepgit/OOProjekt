@@ -58,7 +58,7 @@ public class Pitsa implements Suurus{
     @Override
     public String toString() {
         return "\n\nPitsa: " + nimetus +
-                "\nKoostisosad: " + katted +
+                "\nKoostisosad: " + katted.toString().substring(1,katted.toString().length()-1) +
                 "\nHind(väike/suur): " + getVäikseHind()+"/"+getSuureHind();
 
     }

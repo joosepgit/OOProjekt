@@ -1,24 +1,25 @@
 package Rühmatöö;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Menüü {
-    private ArrayList<Jook> joogid;
-    private ArrayList<Pitsa> pitsad;
+    private List<Jook> joogid;
+    private List<Pitsa> pitsad;
 
-    public ArrayList<Jook> getJoogid() {
+    public List<Jook> getJoogid() {
         return joogid;
     }
 
-    public void setJoogid(ArrayList<Jook> joogid) {
+    public void setJoogid(List<Jook> joogid) {
         this.joogid = joogid;
     }
 
-    public ArrayList<Pitsa> getPitsad() {
+    public List<Pitsa> getPitsad() {
         return pitsad;
     }
 
-    public void setPitsad(ArrayList<Pitsa> pitsad) {
+    public void setPitsad(List<Pitsa> pitsad) {
         this.pitsad = pitsad;
     }
 
@@ -30,8 +31,9 @@ public class Menüü {
     @Override
     public String toString() {
         return "MENÜÜ\n\n" +
-                "PITSAD" + pitsad +
-        "\n\nPitsale 'Omalooming' saab valida kuni 4 lisakomponenti! \n\nJOOGID" + joogid
+                "PITSAD" + pitsad.toString().substring(1,pitsad.toString().length()-1) +
+        "\n\nPitsale 'Omalooming' saab valida kuni 4 lisakomponenti! \n\nJOOGID" +
+                joogid.toString().substring(1,joogid.toString().length()-1)
                 + "\n\nMENÜÜ LÕPP\n";
     }
 }

@@ -1,6 +1,6 @@
 package Rühmatöö;
 
-public class Jook{
+public class Jook {
     private String nimetus;
     private double hind;
     private String suurus;

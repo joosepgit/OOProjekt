@@ -1,21 +1,48 @@
 package Rühmatöö;
 
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import static javafx.application.Application.launch;
 
-public class Pizzapood {
+
+public class Pizzapood extends Application {
     public static void main(String[] args) throws InterruptedException {
+        launch(args);
+    }
+    public void start(Stage peaLava) {
         ArrayList<Jook> joogid = new ArrayList<>(Arrays.asList(joogid()));
         ArrayList<Kate> katted = new ArrayList<>(Arrays.asList(katted()));
         ArrayList<Pitsa> pitsad = new ArrayList<>(Arrays.asList(pitsad(katted)));
         Menüü menüü = new Menüü();
         menüü.setJoogid(joogid.subList(joogid.size() / 2, joogid.size()));
         menüü.setPitsad(pitsad.subList(0, pitsad.size() / 2));
-        suhtlus(pitsad, menüü, joogid, katted);
-    }
 
+        BorderPane piir = new BorderPane();
+        Text tervitus = new Text("Tere tulemast restorani pizzakiosk 2!");
+        piir.setTop(tervitus);
+        Text menyy = new Text(menüü.toString());
+        piir.setLeft(menyy);
+        Scene stseen1 = new Scene(piir, 500, 720, Color.SNOW);
+        VBox küsimus = new VBox();
+        Text küsi = new Text("Mida soovite tellida?");
+        TextField sisend = new TextField("tellimus");
+        küsimus.getChildren().addAll(küsi, sisend);
+        piir.setBottom(küsimus);
+        peaLava.setTitle("Tervitus");
+        peaLava.setScene(stseen1);
+        peaLava.show();
+    }
     public static void suhtlus(ArrayList<Pitsa> pitsad, Menüü menüü, ArrayList<Jook> joogid, ArrayList<Kate> katted)
             throws InterruptedException {
         String tellijaNimi;

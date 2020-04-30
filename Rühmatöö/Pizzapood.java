@@ -1,47 +1,186 @@
 package Rühmatöö;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.*;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Lighting;
+import javafx.scene.effect.Reflection;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import static javafx.application.Application.launch;
 
-
 public class Pizzapood extends Application {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         launch(args);
     }
-    public void start(Stage peaLava) {
+    public void start(Stage peaLava) throws IOException {
         ArrayList<Jook> joogid = new ArrayList<>(Arrays.asList(joogid()));
         ArrayList<Kate> katted = new ArrayList<>(Arrays.asList(katted()));
         ArrayList<Pitsa> pitsad = new ArrayList<>(Arrays.asList(pitsad(katted)));
         Menüü menüü = new Menüü();
         menüü.setJoogid(joogid.subList(joogid.size() / 2, joogid.size()));
         menüü.setPitsad(pitsad.subList(0, pitsad.size() / 2));
-
+        BackgroundImage myBI= new BackgroundImage(new Image("https://i0.wp.com/friendsofchapman.org/wp-content/uploads/2017/08/pizza_stand.jpg?fit=800%2C600&ssl=1",800,600,false,true),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
         BorderPane piir = new BorderPane();
-        Text tervitus = new Text("Tere tulemast restorani pizzakiosk 2!");
-        piir.setTop(tervitus);
-        Text menyy = new Text(menüü.toString());
-        piir.setLeft(menyy);
-        Scene stseen1 = new Scene(piir, 500, 720, Color.SNOW);
+
+        HBox ülemine = new HBox();
+        //ülemine.setBackground(new Background(new BackgroundFill(Color.SNOW, CornerRadii.EMPTY, Insets.EMPTY)));
+        ülemine.setAlignment(Pos.CENTER);
+        Text tervitus = new Text("TERE TULEMAST RESTORANI PIZZAKIOSK 2!");
+        tervitus.setStyle("-fx-background-color: rgba(255,255,255,0.5); -fx-background-radius: 10;");
+        Light light = new Light.Distant();
+        Lighting lighting = new Lighting();
+        lighting.setLight(light);
+        tervitus.setEffect(lighting);
+        tervitus.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 30));
+        tervitus.setFill(Color.RED);
+        ülemine.setPadding(new Insets(10, 0, 40 ,0));
+        ülemine.getChildren().add(tervitus);
+        piir.setTop(ülemine);;
+
         VBox küsimus = new VBox();
-        Text küsi = new Text("Mida soovite tellida?");
-        TextField sisend = new TextField("tellimus");
-        küsimus.getChildren().addAll(küsi, sisend);
+        küsimus.setPadding(new Insets(10, 100, 20, 140));
+        Button enter = new Button("Sisesta");
+        HBox sisestajaabi = new HBox();
+        sisestajaabi.setSpacing(10);
+        enter.setAlignment(Pos.BOTTOM_RIGHT);
+        Text küsi = new Text(" Mida soovite tellida?");
+        küsi.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 16));
+        TextField sisend = new TextField("Tellimuse esitamiseks sisestage kõigepealt oma täisnimi...");
+        sisend.setPrefWidth(450);
+        sisestajaabi.getChildren().addAll(sisend, enter);
+        sisend.addEventHandler(MouseEvent.MOUSE_CLICKED,me -> sisend.setText(""));
+        enter.addEventHandler(MouseEvent.MOUSE_CLICKED,me -> tellimuseVõtja(sisend));
+
+        küsimus.getChildren().addAll(küsi, sisestajaabi);
+        küsimus.setVisible(false);
         piir.setBottom(küsimus);
-        peaLava.setTitle("Tervitus");
+        piir.setStyle("-fx-border-color: #654321;" +
+                "-fx-border-width: 5px;");
+
+        VBox menyy = new VBox(5);
+        //Button edasi = new Button("Joogid ->");
+        menyy.setSpacing(20);
+        Button näita = new Button("Menüü");
+        näita.setMinWidth(100);
+        Button telli = new Button("Telli kohe");
+        telli.setMinWidth(100);
+        menyy.setPadding(new Insets(0,0,20,0));
+        Text kuvaja2 = new Text("Menüü nägemiseks vajuta Menüü nupule.");
+        kuvaja2.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 12));
+        Text kuvaja3 = new Text("Tellimiseks vajuta Telli nupule.");
+        kuvaja3.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 12));
+        menyy.setAlignment(Pos.TOP_CENTER);
+        menyy.setPadding(new Insets(0,0,0,0));
+        menyy.setStyle("-fx-background-color: rgba(255,255,255,0.8); -fx-background-radius: 10;");
+        menyy.getChildren().addAll(kuvaja3,kuvaja2, näita, telli);
+        menyy.setVisible(false);
+        telli.addEventHandler(MouseEvent.MOUSE_CLICKED, me -> küsimus.setVisible(true));
+        näita.addEventHandler(MouseEvent.MOUSE_CLICKED, me -> menyyhandler(kuvaja2, näita, menüü));
+        piir.setCenter(menyy);
+
+        VBox tegevus = new VBox();
+        tegevus.setAlignment(Pos.CENTER);
+        tegevus.setSpacing(40);
+        tegevus.setPadding(new Insets(20));
+        Button menüünupp = new Button("Alusta tellimist");
+        menüünupp.setScaleY(2);
+        Button exit = new Button("Välju");
+        exit.setScaleY(2);
+        menüünupp.addEventHandler(MouseEvent.MOUSE_CLICKED, me -> naitaja(menyy, küsimus, menüünupp));
+        exit.addEventHandler(MouseEvent.MOUSE_CLICKED, me -> System.exit(1));
+        menüünupp.setMaxWidth(Double.MAX_VALUE);
+        exit.setMaxWidth(Double.MAX_VALUE);
+        tegevus.getChildren().addAll(menüünupp, exit);
+
+        VBox parempoolne = new VBox();
+        Text tühi = new Text("Made by \n Joosep Tavits \n& Jakob Univer \n ツ");
+        tühi.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 12));
+        parempoolne.setAlignment(Pos.BOTTOM_CENTER);
+        parempoolne.setSpacing(10);
+        parempoolne.getChildren().add(tühi);
+        parempoolne.setPadding(new Insets(0,23,0,23));
+        tegevus.setPadding(new Insets(20));
+
+        piir.setLeft(tegevus);
+        piir.setBackground(new Background(myBI));
+        piir.setRight(parempoolne);
+
+        Scene stseen1 = new Scene(piir, 800, 600, Color.SNOW);
+
+        peaLava.setTitle("Pizzapood");
         peaLava.setScene(stseen1);
         peaLava.show();
+    }
+    public static void menyyhandler(Text text, Button button, Menüü menu){
+        List<Pitsa> abistaja = menu.getPitsad();
+        List<Jook> joogiabi = menu.getJoogid();
+        StringBuilder ehitaja = new StringBuilder();
+        StringBuilder joogiehitaja = new StringBuilder();
+        for (Jook elem : joogiabi)
+            joogiehitaja.append(elem.toString().replaceAll(" ", ""));
+        for (Pitsa elem: abistaja)
+            ehitaja.append(elem.toString().replaceAll(" ", ""));
+        if (button.getText().equals("Menüü") || button.getText().equals("Pitsad")) {
+            text.setText(ehitaja.toString());
+            button.setText("Joogid");
+        }
+        else if (button.getText().equals("Joogid")) {
+            text.setText(joogiehitaja.toString());
+            button.setText("Pitsad");
+        }
+    }
+
+    public static void naitaja(Node menyy, Node kusimus, Button nupp){
+        if (nupp.getText().equals("Alusta tellimist")) {
+            menyy.setVisible(true);
+            nupp.setText("Tagasi");
+            nupp.setMinWidth(100);
+        }
+        else {
+            menyy.setVisible(false);
+            kusimus.setVisible(false);
+            nupp.setText("Alusta tellimist");
+            nupp.setMinWidth(100);
+        }
+
+    }
+
+    public static void tellimuseVõtja(TextField sisend){
+        //Siit hakkame tellimust sisse võtma siis, siia meetodisse võiks tulla ka kõigi sisendite faili panemine
+        //ja pitsadeks/jookideks teisendamine jms.
+        sisend.setText("Sisestage soovitud pitsad...");
     }
     public static void suhtlus(ArrayList<Pitsa> pitsad, Menüü menüü, ArrayList<Jook> joogid, ArrayList<Kate> katted)
             throws InterruptedException {

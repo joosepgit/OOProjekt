@@ -153,12 +153,11 @@ public class Pizzapood extends Application {
     private void tellimusteTäitmine() {
         ArrayList<String> tellimused = new ArrayList<>();
         File tellimus = new File("tellimused.txt");
-        try(Scanner lugeja = new Scanner(tellimus, "UTF-8")){
-            while(lugeja.hasNextLine()){
+        try (Scanner lugeja = new Scanner(tellimus, "UTF-8")) {
+            while (lugeja.hasNextLine()) {
                 tellimused.add(lugeja.nextLine());
             }
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             System.out.println("Jama faili lugemisel!");
         }
 
@@ -181,107 +180,34 @@ public class Pizzapood extends Application {
                     if (!nimi[0].equals("")) {
                         sisend.setText("Sisestage soovitud pitsad...");
                         tellitav[0]++;
-                        System.out.println(nimi[0]);
-                        System.out.println(pitsadeString[0]);
-                        System.out.println(jookideString[0]);
                     } else {
                         sisend.setText("Meil on tellimuse jaoks teie nime vaja!");
                     }
                 } else if (tellitav[0] == 2) {
                     pitsadeString[0] = sisend.getText();
                     String[] pitsadestring = pitsadeString[0].split(",");
-                    if (!pitsadestring[0].equals("")) {
-                        for (String sõne : pitsadestring) {
-                            String nimetus = sõne.trim().split(" ")[0];
-                            String suurus = sõne.trim().split(" ")[1];
-                            for (Pitsa pitsa : pitsad) {
-                                if (nimetus.toLowerCase().equals("omalooming")) {
-                                    tellitudpitsad.add(omalooming(suurus, katted));
-                                    break;
-                                } else if (nimetus.equals(pitsa.getNimetus()) && suurus.equals(pitsa.getSuurus())) {
-                                    tellitudpitsad.add(pitsa);
-                                }
+                    boolean sobivad = false;
+                    for (int i = 0; i < pitsadestring.length; i++) {
+                        for (Pitsa pitsa : pitsad) {
+                            if (pitsa.getNimetus().equals(pitsadestring[i].split(" ")[0])) {
+                                sobivad = true;
+                                break;
                             }
+                            sobivad = false;
+                        }
+                        if (!sobivad) {
+                            break;
                         }
                     }
-                    sisend.setText("Sisestage soovitud joogid...");
-                    tellitav[0]++;
-                    System.out.println(nimi[0]);
-                    System.out.println(pitsadeString[0]);
-                    System.out.println(jookideString[0]);
-                } else if (tellitav[0] == 3) {
-                    jookideString[0] = sisend.getText();
-                    String[] jookidestring = jookideString[0].split(",");
-                    if (!jookidestring[0].equals("")) {
-                        for (String sõne : jookidestring) {
-                            String nimetus = sõne.trim().split(" ")[0];
-                            String suurus = sõne.trim().split(" ")[1];
-                            for (Jook jook : joogid) {
-                                if (nimetus.equals(jook.getNimetus()) && suurus.equals(jook.getSuurus())) {
-                                    tellitudjoogid.add(jook);
-                                }
-                            }
+                    boolean suurused = true;
+                    for (int i = 0; i < pitsadestring.length; i++) {
+                        if (!pitsadestring[i].split(" ")[1].equals("V") &&
+                                !pitsadestring[i].split(" ")[1].equals("S")) {
+                            suurused = false;
+                            break;
                         }
                     }
-                    if (!pitsadeString[0].equals("") || !jookideString[0].equals("")) {
-                        Tellimus uus = new Tellimus(nimi[0], tellitudpitsad, tellitudjoogid);
-                        try (BufferedWriter tellis = new BufferedWriter(new FileWriter(
-                                new File("tellimused.txt"), true))) {
-                            tellis.write(uus.getTellijaNimi() + " "  + uus.koguhind() + System.lineSeparator());
-
-                        }
-                        catch(IOException e){
-                            System.out.println("Failiga jama");
-                        }
-                        Stage tellitu = new Stage();
-                        // küsimuse ja kahe nupu loomine
-                        BorderPane paigutus = new BorderPane();
-                        Button olgu = new Button("Okei");
-                        olgu.setOnAction(new EventHandler<ActionEvent>() {
-                            public void handle(ActionEvent event) {
-                                tellitu.hide();
-                            }
-                        });
-                        BorderPane.setAlignment(olgu, Pos.CENTER);
-                        BorderPane.setMargin(olgu, new Insets(12, 12, 12, 12)); // optional
-                        paigutus.setBottom(olgu);
-                        Text maksumus = new Text("HIND KOKKU: " + uus.koguhind() + " eur");
-                        maksumus.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 12));
-                        BorderPane.setMargin(maksumus, new Insets(12, 12, 12, 12));
-                        paigutus.setCenter(maksumus);
-                        Scene stseen2 = new Scene(paigutus);
-                        tellitu.setScene(stseen2);
-                        tellitu.show();
-                        sisend.setText("Tänan! Kui tahate veel midagi tellida, sisestage enda nimi.");
-                        tellitav[0] = 1;
-                        System.out.println(nimi[0]);
-                        System.out.println(pitsadeString[0]);
-                        System.out.println(jookideString[0]);
-                    } else {
-                        sisend.setText("Midagi te peate ikka tellima! Sisestage soovitud pitsad...");
-                        tellitav[0] = 2;
-                    }
-                }
-            }
-        });
-        sisend.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                if (keyEvent.getCode() == KeyCode.ENTER) {
-                    if (tellitav[0] == 1) {
-                        nimi[0] = sisend.getText();
-                        if (!nimi[0].equals("")) {
-                            sisend.setText("Sisestage soovitud pitsad...");
-                            tellitav[0]++;
-                            System.out.println(nimi[0]);
-                            System.out.println(pitsadeString[0]);
-                            System.out.println(jookideString[0]);
-                        } else {
-                            sisend.setText("Meil on tellimuse jaoks teie nime vaja!");
-                        }
-                    } else if (tellitav[0] == 2) {
-                        pitsadeString[0] = sisend.getText();
-                        String[] pitsadestring = pitsadeString[0].split(",");
+                    if (sobivad && suurused) {
                         if (!pitsadestring[0].equals("")) {
                             for (String sõne : pitsadestring) {
                                 String nimetus = sõne.trim().split(" ")[0];
@@ -298,12 +224,35 @@ public class Pizzapood extends Application {
                         }
                         sisend.setText("Sisestage soovitud joogid...");
                         tellitav[0]++;
-                        System.out.println(nimi[0]);
-                        System.out.println(pitsadeString[0]);
-                        System.out.println(jookideString[0]);
-                    } else if (tellitav[0] == 3) {
-                        jookideString[0] = sisend.getText();
-                        String[] jookidestring = jookideString[0].split(",");
+                    } else {
+                        sisend.setText("Selliseid pitsasid meil ei müüda, sisestage uuesti...");
+                    }
+
+                } else if (tellitav[0] == 3) {
+                    jookideString[0] = sisend.getText();
+                    String[] jookidestring = jookideString[0].split(",");
+                    boolean sobivad = false;
+                    for (int i = 0; i < jookidestring.length; i++) {
+                        for (Jook jook : joogid) {
+                            if (jook.getNimetus().equals(jookidestring[i].split(" ")[0])) {
+                                sobivad = true;
+                                break;
+                            }
+                            sobivad = false;
+                        }
+                        if (!sobivad) {
+                            break;
+                        }
+                    }
+                    boolean suurused = true;
+                    for (int i = 0; i < jookidestring.length; i++) {
+                        if (!jookidestring[i].split(" ")[1].equals("V") &&
+                                !jookidestring[i].split(" ")[1].equals("S")) {
+                            suurused = false;
+                            break;
+                        }
+                    }
+                    if (suurused && sobivad) {
                         if (!jookidestring[0].equals("")) {
                             for (String sõne : jookidestring) {
                                 String nimetus = sõne.trim().split(" ")[0];
@@ -319,10 +268,9 @@ public class Pizzapood extends Application {
                             Tellimus uus = new Tellimus(nimi[0], tellitudpitsad, tellitudjoogid);
                             try (BufferedWriter tellis = new BufferedWriter(new FileWriter(
                                     new File("tellimused.txt"), true))) {
-                                tellis.write(uus.getTellijaNimi() + " "  + uus.koguhind() + System.lineSeparator());
+                                tellis.write(uus.getTellijaNimi() + " " + uus.koguhind() + System.lineSeparator());
 
-                            }
-                            catch(IOException e){
+                            } catch (IOException e) {
                                 System.out.println("Failiga jama");
                             }
                             Stage tellitu = new Stage();
@@ -346,12 +294,145 @@ public class Pizzapood extends Application {
                             tellitu.show();
                             sisend.setText("Tänan! Kui tahate veel midagi tellida, sisestage enda nimi.");
                             tellitav[0] = 1;
-                            System.out.println(nimi[0]);
-                            System.out.println(pitsadeString[0]);
-                            System.out.println(jookideString[0]);
                         } else {
                             sisend.setText("Midagi te peate ikka tellima! Sisestage soovitud pitsad...");
                             tellitav[0] = 2;
+                        }
+                    } else {
+                        sisend.setText("Selliseid jooke meil ei müüda, sisestage uuesti...");
+                    }
+                }
+            }
+        });
+        sisend.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    if (tellitav[0] == 1) {
+                        nimi[0] = sisend.getText();
+                        if (!nimi[0].equals("")) {
+                            sisend.setText("Sisestage soovitud pitsad...");
+                            tellitav[0]++;
+                        } else {
+                            sisend.setText("Meil on tellimuse jaoks teie nime vaja!");
+                        }
+                    } else if (tellitav[0] == 2) {
+                        pitsadeString[0] = sisend.getText();
+                        String[] pitsadestring = pitsadeString[0].split(",");
+                        boolean sobivad = false;
+                        for (int i = 0; i < pitsadestring.length; i++) {
+                            for (Pitsa pitsa : pitsad) {
+                                if (pitsa.getNimetus().equals(pitsadestring[i].split(" ")[0])) {
+                                    sobivad = true;
+                                    break;
+                                }
+                                sobivad = false;
+                            }
+                            if (!sobivad) {
+                                break;
+                            }
+                        }
+                        boolean suurused = true;
+                        for (int i = 0; i < pitsadestring.length; i++) {
+                            if (!pitsadestring[i].split(" ")[1].equals("V") &&
+                                    !pitsadestring[i].split(" ")[1].equals("S")) {
+                                suurused = false;
+                                break;
+                            }
+                        }
+                        if (sobivad && suurused) {
+                            if (!pitsadestring[0].equals("")) {
+                                for (String sõne : pitsadestring) {
+                                    String nimetus = sõne.trim().split(" ")[0];
+                                    String suurus = sõne.trim().split(" ")[1];
+                                    for (Pitsa pitsa : pitsad) {
+                                        if (nimetus.toLowerCase().equals("omalooming")) {
+                                            tellitudpitsad.add(omalooming(suurus, katted));
+                                            break;
+                                        } else if (nimetus.equals(pitsa.getNimetus()) && suurus.equals(pitsa.getSuurus())) {
+                                            tellitudpitsad.add(pitsa);
+                                        }
+                                    }
+                                }
+                            }
+                            sisend.setText("Sisestage soovitud joogid...");
+                            tellitav[0]++;
+                        } else {
+                            sisend.setText("Selliseid pitsasid meil ei müüda, sisestage uuesti...");
+                        }
+
+                    } else if (tellitav[0] == 3) {
+                        jookideString[0] = sisend.getText();
+                        String[] jookidestring = jookideString[0].split(",");
+                        boolean sobivad = false;
+                        for (int i = 0; i < jookidestring.length; i++) {
+                            for (Jook jook : joogid) {
+                                if (jook.getNimetus().equals(jookidestring[i].split(" ")[0])) {
+                                    sobivad = true;
+                                    break;
+                                }
+                                sobivad = false;
+                            }
+                            if (!sobivad) {
+                                break;
+                            }
+                        }
+                        boolean suurused = true;
+                        for (int i = 0; i < jookidestring.length; i++) {
+                            if (!jookidestring[i].split(" ")[1].equals("V") &&
+                                    !jookidestring[i].split(" ")[1].equals("S")) {
+                                suurused = false;
+                                break;
+                            }
+                        }
+                        if (suurused && sobivad) {
+                            if (!jookidestring[0].equals("")) {
+                                for (String sõne : jookidestring) {
+                                    String nimetus = sõne.trim().split(" ")[0];
+                                    String suurus = sõne.trim().split(" ")[1];
+                                    for (Jook jook : joogid) {
+                                        if (nimetus.equals(jook.getNimetus()) && suurus.equals(jook.getSuurus())) {
+                                            tellitudjoogid.add(jook);
+                                        }
+                                    }
+                                }
+                            }
+                            if (!pitsadeString[0].equals("") || !jookideString[0].equals("")) {
+                                Tellimus uus = new Tellimus(nimi[0], tellitudpitsad, tellitudjoogid);
+                                try (BufferedWriter tellis = new BufferedWriter(new FileWriter(
+                                        new File("tellimused.txt"), true))) {
+                                    tellis.write(uus.getTellijaNimi() + " " + uus.koguhind() + System.lineSeparator());
+
+                                } catch (IOException e) {
+                                    System.out.println("Failiga jama");
+                                }
+                                Stage tellitu = new Stage();
+                                // küsimuse ja kahe nupu loomine
+                                BorderPane paigutus = new BorderPane();
+                                Button olgu = new Button("Okei");
+                                olgu.setOnAction(new EventHandler<ActionEvent>() {
+                                    public void handle(ActionEvent event) {
+                                        tellitu.hide();
+                                    }
+                                });
+                                BorderPane.setAlignment(olgu, Pos.CENTER);
+                                BorderPane.setMargin(olgu, new Insets(12, 12, 12, 12)); // optional
+                                paigutus.setBottom(olgu);
+                                Text maksumus = new Text("HIND KOKKU: " + uus.koguhind() + " eur");
+                                maksumus.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 12));
+                                BorderPane.setMargin(maksumus, new Insets(12, 12, 12, 12));
+                                paigutus.setCenter(maksumus);
+                                Scene stseen2 = new Scene(paigutus);
+                                tellitu.setScene(stseen2);
+                                tellitu.show();
+                                sisend.setText("Tänan! Kui tahate veel midagi tellida, sisestage enda nimi.");
+                                tellitav[0] = 1;
+                            } else {
+                                sisend.setText("Midagi te peate ikka tellima! Sisestage soovitud pitsad...");
+                                tellitav[0] = 2;
+                            }
+                        } else {
+                            sisend.setText("Selliseid jooke meil ei müüda, sisestage uuesti...");
                         }
                     }
                 }

@@ -42,11 +42,15 @@ public class Pizzapood extends Application {
         Menüü menüü = new Menüü();
         menüü.setJoogid(joogid.subList(joogid.size() / 2, joogid.size()));
         menüü.setPitsad(pitsad.subList(0, pitsad.size() / 2));
+        //Lisame liidesele taustapildi ning seame talle mõned muutumisreeglid.
+        BackgroundSize taustapilt = new BackgroundSize(800, 600, false, false, true, true);
         BackgroundImage myBI = new BackgroundImage(new Image("https://i0.wp.com/friendsofchapman.org/wp-content/uploads/2017/08/pizza_stand.jpg?fit=800%2C600&ssl=1", 800, 600, false, true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT);
+                taustapilt);
+        //Loome välise borderpane, kogu ülejäänud paigutus toimub selle borderpane osade sees.
         BorderPane piir = new BorderPane();
 
+        //Loome horisontaalse paigutusega kasti, mis sisaldab tervitust.
         HBox ülemine = new HBox();
         //ülemine.setBackground(new Background(new BackgroundFill(Color.SNOW, CornerRadii.EMPTY, Insets.EMPTY)));
         ülemine.setAlignment(Pos.CENTER);
@@ -60,19 +64,24 @@ public class Pizzapood extends Application {
         tervitus.setFill(Color.RED);
         ülemine.setPadding(new Insets(10, 0, 40, 0));
         ülemine.getChildren().add(tervitus);
+        //Paigutame selle välise borderpane tippu.
         piir.setTop(ülemine);
-        ;
 
+
+        //Loome vertikaalse ehitusega osa, mis tegeleb tellimuse sisendi võtmisega.
         VBox küsimus = new VBox();
-        küsimus.setPadding(new Insets(10, 100, 20, 140));
+        küsimus.setAlignment(Pos.CENTER);
+        küsimus.setPadding(new Insets(10, 100, 20, 100));
         Button enter = new Button("Sisesta");
         HBox sisestajaabi = new HBox();
+        sisestajaabi.setAlignment(Pos.CENTER);
         sisestajaabi.setSpacing(10);
         enter.setAlignment(Pos.BOTTOM_RIGHT);
         Text küsi = new Text(" Mida soovite tellida?");
         küsi.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 16));
         TextField sisend = new TextField("Tellimuse esitamiseks sisestage kõigepealt oma täisnimi...");
         sisend.setPrefWidth(450);
+        //Kui vajutada hiirega TextFieldile, siis kaob juhendav tekst.
         sisestajaabi.getChildren().addAll(sisend, enter);
         sisend.addEventHandler(MouseEvent.MOUSE_CLICKED, me -> sisend.setText(""));
         sisend.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -87,8 +96,11 @@ public class Pizzapood extends Application {
         tellimuseKüsija(enter, sisend, pitsad, joogid, katted);
 
         küsimus.getChildren().addAll(küsi, sisestajaabi);
+        //Küsimus on esialgu nähtamatu, muutub nähtavaks kui kasutaja vajutab "Telli" nupule
         küsimus.setVisible(false);
+        //Paigutame küsimuse välise borderpane kõige alumisse osasse.
         piir.setBottom(küsimus);
+        //Lisame kogu aknale pruuni piiri, et näeks parem välja.
         piir.setStyle("-fx-border-color: #654321;" +
                 "-fx-border-width: 5px;");
 
@@ -99,8 +111,6 @@ public class Pizzapood extends Application {
         näita.setMinWidth(100);
         Button telli = new Button("Telli kohe");
         telli.setMinWidth(100);
-        Button lõpetamine = new Button("Lõpeta tellimine");
-        lõpetamine.setMinWidth(100);
         menyy.setPadding(new Insets(0, 0, 20, 0));
         Text kuvaja2 = new Text("Menüü nägemiseks vajuta Menüü nupule.");
         kuvaja2.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 12));
@@ -109,13 +119,15 @@ public class Pizzapood extends Application {
         menyy.setAlignment(Pos.TOP_CENTER);
         menyy.setPadding(new Insets(0, 0, 0, 0));
         menyy.setStyle("-fx-background-color: rgba(255,255,255,0.8); -fx-background-radius: 10;");
-        menyy.getChildren().addAll(kuvaja3, kuvaja2, näita, telli, lõpetamine);
+        menyy.getChildren().addAll(kuvaja3, kuvaja2, näita, telli);
         menyy.setVisible(false);
         telli.addEventHandler(MouseEvent.MOUSE_CLICKED, me -> küsimus.setVisible(true));
+        //Nupp näita reguleerib alljärgneva funktsiooni abil menüü nähtavust ning pitsade ja jookide vahel valimist.
         näita.addEventHandler(MouseEvent.MOUSE_CLICKED, me -> menyyhandler(kuvaja2, näita, menüü));
-        lõpetamine.addEventHandler(MouseEvent.MOUSE_CLICKED, me -> tellimusteTäitmine());
+        //Menüü paigutame pealava keskele
         piir.setCenter(menyy);
 
+        //Loome uue vertikaalse kasti, mille abil alustatakse tegevust.
         VBox tegevus = new VBox();
         tegevus.setAlignment(Pos.CENTER);
         tegevus.setSpacing(40);
@@ -124,6 +136,7 @@ public class Pizzapood extends Application {
         menüünupp.setScaleY(2);
         Button exit = new Button("Välju");
         exit.setScaleY(2);
+        //Allolevad lambda avaldised reguleerivad tegevuse nuppude tööd.
         menüünupp.addEventHandler(MouseEvent.MOUSE_CLICKED, me -> naitaja(menyy, küsimus, menüünupp));
         exit.addEventHandler(MouseEvent.MOUSE_CLICKED, me -> System.exit(0));
         menüünupp.setMaxWidth(Double.MAX_VALUE);
@@ -131,6 +144,7 @@ public class Pizzapood extends Application {
         tegevus.getChildren().addAll(menüünupp, exit);
 
         VBox parempoolne = new VBox();
+        //VBox vasakusse äärde autorite nimedega.
         Text tühi = new Text("Made by \n Joosep Tavits \n& Jakob Univer \n ツ");
         tühi.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 12));
         parempoolne.setAlignment(Pos.BOTTOM_CENTER);
@@ -143,8 +157,14 @@ public class Pizzapood extends Application {
         piir.setBackground(new Background(myBI));
         piir.setRight(parempoolne);
 
+        //Akna esialgne suurus ja sisu värv
         Scene stseen1 = new Scene(piir, 800, 600, Color.SNOW);
 
+        //Akna suuruse piirangud
+        peaLava.setMinWidth(820);
+        peaLava.setMinHeight(640);
+        peaLava.setMaxHeight(800);
+        peaLava.setMaxWidth(1025);
         peaLava.setTitle("Pizzapood");
         peaLava.setScene(stseen1);
         peaLava.show();
@@ -213,12 +233,7 @@ public class Pizzapood extends Application {
                                 String nimetus = sõne.trim().split(" ")[0];
                                 String suurus = sõne.trim().split(" ")[1];
                                 for (Pitsa pitsa : pitsad) {
-                                    if (nimetus.toLowerCase().equals("omalooming")) {
-                                        tellitudpitsad.add(omalooming(suurus, katted));
-                                        break;
-                                    } else if (nimetus.equals(pitsa.getNimetus()) && suurus.equals(pitsa.getSuurus())) {
-                                        tellitudpitsad.add(pitsa);
-                                    }
+                                    tellitudpitsad.add(pitsa);
                                 }
                             }
                         }
@@ -346,12 +361,7 @@ public class Pizzapood extends Application {
                                     String nimetus = sõne.trim().split(" ")[0];
                                     String suurus = sõne.trim().split(" ")[1];
                                     for (Pitsa pitsa : pitsad) {
-                                        if (nimetus.toLowerCase().equals("omalooming")) {
-                                            tellitudpitsad.add(omalooming(suurus, katted));
-                                            break;
-                                        } else if (nimetus.equals(pitsa.getNimetus()) && suurus.equals(pitsa.getSuurus())) {
-                                            tellitudpitsad.add(pitsa);
-                                        }
+                                        tellitudpitsad.add(pitsa);
                                     }
                                 }
                             }
@@ -472,87 +482,6 @@ public class Pizzapood extends Application {
 
     }
 
-    /*public static void suhtlus(ArrayList<Pitsa> pitsad, Menüü menüü, ArrayList<Jook> joogid, ArrayList<Kate> katted)
-            throws InterruptedException {
-        String tellijaNimi;
-        ArrayList<String> tellimused = new ArrayList<>();
-        ArrayList<Pitsa> tellitudpitsad = new ArrayList<>();
-        ArrayList<Jook> tellitudjoogid = new ArrayList<>();
-        while (true) {
-            System.out.println("Tere tulemast restorani pizzakiosk 2!");
-            Scanner suhtlus = new Scanner(System.in);
-            System.out.println("Menüü nägemiseks vajutage enterit...");
-            suhtlus.nextLine();
-            System.out.println(menüü.toString());
-            System.out.println("Vajutage enterit, kui olete valmis tellima...");
-            suhtlus.nextLine();
-            System.out.println("Tellimuse esitamiseks sisestage kõigepealt oma täisnimi");
-            tellijaNimi = suhtlus.nextLine();
-            System.out.println("Sisestage valitud pitsa nimetus ja suurus 'V' -> (VÄIKE) või 'S' -> (SUUR)." +
-                    " \nKui soovite mitut erinevat, siis eraldage komadega.");
-            String[] pitsadestring = suhtlus.nextLine().split(",");
-            if (!pitsadestring[0].equals("")) {
-                for (String sõne : pitsadestring) {
-                    String nimetus = sõne.trim().split(" ")[0];
-                    String suurus = sõne.trim().split(" ")[1];
-                    for (Pitsa pitsa : pitsad) {
-                        if (nimetus.toLowerCase().equals("omalooming")) {
-                            tellitudpitsad.add(omalooming(suurus, suhtlus, katted));
-                            break;
-                        } else if (nimetus.equals(pitsa.getNimetus()) && suurus.equals(pitsa.getSuurus())) {
-                            tellitudpitsad.add(pitsa);
-                        }
-                    }
-                }
-            }
-            System.out.println("Sisestage valitud joogi nimetus ja suurus 'V' -> (VÄIKE) või 'S' -> (SUUR)." +
-                    " \nKui soovite mitut erinevat, siis eraldage komadega.");
-            String[] jookidestring = suhtlus.nextLine().split(",");
-            if (!jookidestring[0].equals("")) {
-                for (String sõne : jookidestring) {
-                    String nimetus = sõne.trim().split(" ")[0];
-                    String suurus = sõne.trim().split(" ")[1];
-                    for (Jook jook : joogid) {
-                        if (nimetus.equals(jook.getNimetus()) && suurus.equals(jook.getSuurus())) {
-                            tellitudjoogid.add(jook);
-                        }
-                    }
-                }
-            }
-            Tellimus uus = new Tellimus(tellijaNimi, tellitudpitsad, tellitudjoogid);
-            System.out.println(uus.tellitud());
-            System.out.println();
-            if (Math.random() * 100 > 10.0)
-                System.out.println("HIND KOKKU: " + uus.koguhind());
-            else {
-                System.out.println("HIND KOKKU: " + Math.round(Math.random() * 25 + 5));
-            }
-            tellimused.add(uus.getTellijaNimi() + " " + uus.koguhind());
-            uus.getJoogid().clear();
-            uus.getPitsad().clear();
-            System.out.println("Kui soovite veel midagi tellida, vajutage enterit, kui ei, kirjutage 'Stopp' ning siis " +
-                    "vajutage enterit.");
-            String vastus = suhtlus.nextLine();
-            if (vastus.toLowerCase().equals("stopp")) {
-                break;
-            }
-        }
-        System.out.println("Alustati tellimuste täitmist.");
-        while (!tellimused.isEmpty()) {
-            Thread.sleep(10000);
-            System.out.println("Tellimus " + tellimused.get(0) + " valmis!");
-            tellimused.remove(tellimused.get(0));
-        }
-        Scanner lõpp = new Scanner(System.in);
-        System.out.println("Kõik tellimused täidetud.\nUuesti alustamiseks vajutage enterit, lõpetamiseks kirjutage 'stopp'");
-        String valik = lõpp.nextLine();
-        if (valik.equals(""))
-            suhtlus(pitsad, menüü, joogid, katted);
-        else {
-            System.out.println("Lahkusite poest, rõõmsa jällenägemiseni!");
-        }
-    }*/
-
     public static Jook[] joogid() {
         Jook limonaad = new Jook("Limonaad", "V", 2);
         Jook vesi = new Jook("Vesi", "V", 0.5);
@@ -599,30 +528,5 @@ public class Pizzapood extends Application {
         Pitsa sOmalooming = new Pitsa(suvaline, "S", "Omalooming");
         return new Pitsa[]{Hakklihapitsa, Salaamipitsa, Šampinjonipitsa, Omalooming,
                 sHakklihapitsa, sSalaamipitsa, sŠampinjonipitsa, sOmalooming};
-    }
-
-    public static Pitsa omalooming(String suurus, ArrayList<Kate> katted) {
-        Pitsa erinev = new Pitsa(new ArrayList<>(Arrays.asList(
-                katted.get(0), katted.get(1), katted.get(2))), suurus, "Omalooming");
-        for (int i = 0; i < 4; i++) {
-            System.out.println("Katted: hakkliha, salaami, paprika, ananass, šampinjonid");
-            System.out.println("Vali kate nr " + (i + 1) + ".");
-            System.out.println("Kui ei soovi rohkem katteid valida, vajutage ENTER.");
-            String kate = "";
-            if (kate.equals("hakkliha")) {
-                erinev.lisaKate(katted.get(3));
-            } else if (kate.equals("salaami")) {
-                erinev.lisaKate(katted.get(4));
-            } else if (kate.equals("paprika")) {
-                erinev.lisaKate(katted.get(5));
-            } else if (kate.equals("ananass")) {
-                erinev.lisaKate(katted.get(6));
-            } else if (kate.equals("šampinjonid")) {
-                erinev.lisaKate(katted.get(7));
-            } else {
-                break;
-            }
-        }
-        return erinev;
     }
 }

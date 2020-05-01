@@ -111,6 +111,11 @@ public class Pizzapood extends Application {
         näita.setMinWidth(100);
         Button telli = new Button("Telli kohe");
         telli.setMinWidth(100);
+        Button lõpeta = new Button("Lõpeta tellimine");
+        telli.setMinWidth(100);
+        Text juhend = new Text("Pitsad ja joogid tuleb sisestada vormingus: \"toote_nimetus suurus(V/S)\"." +
+                " \nErinevad tooted eraldada komaga.");
+        juhend.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 12));
         menyy.setPadding(new Insets(0, 0, 20, 0));
         Text kuvaja2 = new Text("Menüü nägemiseks vajuta Menüü nupule.");
         kuvaja2.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 12));
@@ -119,12 +124,13 @@ public class Pizzapood extends Application {
         menyy.setAlignment(Pos.TOP_CENTER);
         menyy.setPadding(new Insets(0, 0, 0, 0));
         menyy.setStyle("-fx-background-color: rgba(255,255,255,0.8); -fx-background-radius: 10;");
-        menyy.getChildren().addAll(kuvaja3, kuvaja2, näita, telli);
+        menyy.getChildren().addAll(kuvaja3, kuvaja2, näita, telli, lõpeta, juhend);
         menyy.setVisible(false);
         telli.addEventHandler(MouseEvent.MOUSE_CLICKED, me -> küsimus.setVisible(true));
         //Nupp näita reguleerib alljärgneva funktsiooni abil menüü nähtavust ning pitsade ja jookide vahel valimist.
         näita.addEventHandler(MouseEvent.MOUSE_CLICKED, me -> menyyhandler(kuvaja2, näita, menüü));
         //Menüü paigutame pealava keskele
+        lõpeta.addEventHandler(MouseEvent.MOUSE_CLICKED, me -> tellimusteTäitmine());
         piir.setCenter(menyy);
 
         //Loome uue vertikaalse kasti, mille abil alustatakse tegevust.
@@ -177,10 +183,41 @@ public class Pizzapood extends Application {
             while (lugeja.hasNextLine()) {
                 tellimused.add(lugeja.nextLine());
             }
+            PrintWriter pw = new PrintWriter("tellimused.txt");
+            pw.close();
         } catch (IOException e) {
             System.out.println("Jama faili lugemisel!");
         }
-
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for (int i = tellimused.size() - 1; i > -1; i--) {
+            Stage tellitu = new Stage();
+            BorderPane paigutus = new BorderPane();
+            Button olgu = new Button("Võta");
+            olgu.setOnAction(new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent event) {
+                    tellitu.hide();
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            BorderPane.setAlignment(olgu, Pos.CENTER);
+            BorderPane.setMargin(olgu, new Insets(12, 12, 12, 12)); // optional
+            paigutus.setBottom(olgu);
+            Text maksumus = new Text("Tellimus " + tellimused.get(i) + " on valmis!");
+            maksumus.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 12));
+            BorderPane.setMargin(maksumus, new Insets(12, 12, 12, 12));
+            paigutus.setCenter(maksumus);
+            Scene stseen2 = new Scene(paigutus);
+            tellitu.setScene(stseen2);
+            tellitu.show();
+        }
     }
 
     private void tellimuseKüsija(Button enter, TextField sisend, ArrayList<Pitsa> pitsad, ArrayList<Jook> joogid,
@@ -233,7 +270,9 @@ public class Pizzapood extends Application {
                                 String nimetus = sõne.trim().split(" ")[0];
                                 String suurus = sõne.trim().split(" ")[1];
                                 for (Pitsa pitsa : pitsad) {
-                                    tellitudpitsad.add(pitsa);
+                                    if (nimetus.equals(pitsa.getNimetus()) && suurus.equals(pitsa.getSuurus())) {
+                                        tellitudpitsad.add(pitsa);
+                                    }
                                 }
                             }
                         }
@@ -361,7 +400,9 @@ public class Pizzapood extends Application {
                                     String nimetus = sõne.trim().split(" ")[0];
                                     String suurus = sõne.trim().split(" ")[1];
                                     for (Pitsa pitsa : pitsad) {
-                                        tellitudpitsad.add(pitsa);
+                                        if (nimetus.equals(pitsa.getNimetus()) && suurus.equals(pitsa.getSuurus())) {
+                                            tellitudpitsad.add(pitsa);
+                                        }
                                     }
                                 }
                             }
